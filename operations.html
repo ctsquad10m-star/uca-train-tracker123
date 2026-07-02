@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Operations Health Dashboard</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+
+background:#05070a;
+color:white;
+
+}
+
+header{
+
+background:#0b1220;
+padding:20px;
+font-size:28px;
+font-weight:bold;
+color:#00ff88;
+border-bottom:1px solid #1f2a3a;
+
+}
+
+.subtitle{
+
+padding:8px 20px;
+color:#9aa7b7;
+font-size:14px;
+
+}
+
+.grid{
+
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+gap:18px;
+padding:20px;
+
+}
+
+.card{
+
+background:#0a0f18;
+border:1px solid #1f2a3a;
+border-radius:12px;
+padding:18px;
+box-shadow:0 0 15px rgba(0,255,136,.08);
+
+}
+
+.card h2{
+
+margin-bottom:15px;
+color:#00ff88;
+
+}
+
+.row{
+
+display:flex;
+justify-content:space-between;
+margin:10px 0;
+font-size:15px;
+
+}
+
+.status{
+
+font-weight:bold;
+
+}
+
+.online{
+
+color:#00ff88;
+
+}
+
+.offline{
+
+color:#ff4444;
+
+}
+
+.healthBar{
+
+margin-top:15px;
+height:18px;
+background:#222;
+border-radius:20px;
+overflow:hidden;
+
+}
+
+.healthFill{
+
+height:100%;
+width:100%;
+background:linear-gradient(90deg,#00ff88,#00cc66);
+transition:.5s;
+
+}
+
+.footer{
+
+text-align:center;
+padding:20px;
+color:#777;
+
+}
+
+@media(max-width:700px){
+
+header{
+
+font-size:22px;
+
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+🛰 Operations Health Dashboard
+
+</header>
+
+<div class="subtitle">
+
+Live monitoring for the UCA Train Tracker system
+
+</div>
+
+<div class="grid">
+
+<div class="card">
+
+<h2>🌐 Internet</h2>
+
+<div class="row">
+
+<span>Status</span>
+
+<span id="internet" class="status">Checking...</span>
+
+</div>
+
+<div class="row">
+
+<span>Connection</span>
+
+<span id="connection">Unknown</span>
+
+</div>
+
+<div class="row">
+
+<span>Last Update</span>
+
+<span id="time">--</span>
+
+</div>
+
+<div class="healthBar">
+
+<div id="overallBar" class="healthFill"></div>
+
+</div>
+
+<div style="margin-top:10px">
+
+Overall System Health:
+<b id="overallPercent">100%</b>
+
+</div>
+
+</div>
+
+<div class="card">
+
+<h2>🎥 Syracuse Camera</h2>
+
+<div class="row">
+
+<span>Status</span>
+
+<span id="cam0" class="online">🟢 LIVE</span>
+
+</div>
+
+<div class="row">
+
+<span>Reconnects</span>
+
+<span id="rec0">0</span>
+
+</div>
+
+<div class="row">
+
+<span>Buffering</span>
+
+<span id="buf0">No</span>
+
+</div>
+
+</div>
+
+<div class="card">
+
+<h2>🎥 Sauquoit Camera</h2>
+
+<div class="row">
+
+<span>Status</span>
+
+<span id="cam1" class="online">🟢 LIVE</span>
+
+</div>
+
+<div class="row">
+
+<span>Reconnects</span>
+
+<span id="rec1">0</span>
+
+</div>
+
+<div class="row">
+
+<span>Buffering</span>
+
+<span id="buf1">No</span>
+
+</div>
+
+</div>
+
+<div class="card">
+
+<h2>🎥 Fonda Camera</h2>
+
+<div class="row">
+
+<span>Status</span>
+
+<span id="cam2" class="online">🟢 LIVE</span>
+
+</div>
+
+<div class="row">
+
+<span>Reconnects</span>
+
+<span id="rec2">0</span>
+
+</div>
+
+<div class="row">
+
+<span>Buffering</span>
+
+<span id="buf2">No</span>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="footer">
+
+UCA Train Tracker Operations Dashboard
+
+</div>
+
+<script>
+
+const reconnects=[0,0,0];
+
+function updateDashboard(){
+
+document.getElementById("internet").textContent=
+navigator.onLine ? "🟢 Online":"🔴 Offline";
+
+document.getElementById("internet").className=
+navigator.onLine ? "status online":"status offline";
+
+document.getElementById("time").textContent=
+new Date().toLocaleTimeString();
+
+if(navigator.connection){
+
+document.getElementById("connection").textContent=
+navigator.connection.effectiveType.toUpperCase();
+
+}
+
+let health=100;
+
+for(let i=0;i<3;i++){
+
+health-=reconnects[i]*5;
+
+}
+
+if(!navigator.onLine){
+
+health=0;
+
+}
+
+health=Math.max(0,health);
+
+document.getElementById("overallPercent").textContent=health+"%";
+
+document.getElementById("overallBar").style.width=health+"%";
+
+}
+
+setInterval(updateDashboard,1000);
+
+updateDashboard();
+
+</script>
+
+</body>
+</html>

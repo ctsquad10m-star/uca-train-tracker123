@@ -47,5 +47,177 @@
   async function discordStats(){try{const r=await fetch('https://discord.com/api/v10/invites/3Buu2NKpa6?with_counts=true&with_expiration=true',{cache:'no-store'});if(!r.ok)throw Error('Discord invite unavailable');const d=await r.json();$('discordTotal').textContent=Number(d.approximate_member_count).toLocaleString();$('discordOnline').textContent=Number(d.approximate_presence_count).toLocaleString();if(d.guild&&d.guild.name)$('discordName').childNodes[0].nodeValue=d.guild.name+' '}catch(e){$('discordTotal').textContent='--';$('discordOnline').textContent='--'}}discordStats();setInterval(discordStats,300000);
   const c=$('particles'),x=c.getContext('2d');let p=[];function resize(){c.width=innerWidth*devicePixelRatio;c.height=innerHeight*devicePixelRatio;x.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);p=Array.from({length:Math.min(64,Math.round(innerWidth/25))},()=>({x:Math.random()*innerWidth,y:Math.random()*innerHeight,r:Math.random()*1.35+.35,vy:Math.random()*.15+.02,vx:(Math.random()-.5)*.1}))}function paint(){x.clearRect(0,0,innerWidth,innerHeight);const blue=getComputedStyle(root).getPropertyValue('--accent');for(let i=0;i<p.length;i++){const a=p[i];a.y-=a.vy;a.x+=a.vx;if(a.y<-5){a.y=innerHeight+5;a.x=Math.random()*innerWidth}if(a.x<-5||a.x>innerWidth+5)a.vx*=-1;for(let j=i+1;j<p.length;j++){const b=p[j],dx=a.x-b.x,dy=a.y-b.y,d=dx*dx+dy*dy;if(d<17000){x.globalAlpha=(1-d/17000)*.12;x.strokeStyle=blue;x.lineWidth=.65;x.beginPath();x.moveTo(a.x,a.y);x.lineTo(b.x,b.y);x.stroke()}}x.globalAlpha=.33;x.fillStyle=blue;x.beginPath();x.arc(a.x,a.y,a.r,0,Math.PI*2);x.fill()}x.globalAlpha=1;requestAnimationFrame(paint)}resize();addEventListener('resize',resize,{passive:true});paint();})();
   </script>
+  <style>
+    /* Train timer: route-mile estimates are intentionally separated from the live tracker. */
+    .timer-panel{min-height:302px}.timer-intro{margin:-2px 0 14px;color:var(--muted);font-size:12px;line-height:1.48}.timer-assumption{display:flex;align-items:flex-start;gap:8px;margin:0 0 14px;padding:9px 10px;border:1px solid rgba(255,195,90,.26);border-radius:11px;background:rgba(255,195,90,.08);color:var(--muted);font-size:10px;line-height:1.45}.timer-assumption svg{flex:none;width:15px;height:15px;margin-top:1px;stroke:var(--yellow);fill:none;stroke-width:1.8}.timer-controls{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}.timer-controls label{color:var(--dim);font-size:10px;font-weight:800;letter-spacing:.07em;text-transform:uppercase}.timer-controls select{margin-left:7px;border:1px solid var(--border);border-radius:8px;padding:6px 8px;background:var(--card-solid);color:var(--text);font:700 11px var(--font);outline:none}.timer-status{padding:5px 8px;border:1px solid var(--border);border-radius:8px;color:var(--accent2);background:rgba(45,156,255,.08);font-size:9px;font-weight:850;letter-spacing:.07em;text-transform:uppercase}.milepost-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.milepost-button{position:relative;overflow:hidden;min-height:73px;padding:10px 10px 9px;text-align:left;border:1px solid var(--border);border-radius:12px;background:rgba(255,255,255,.035);color:var(--muted);font:inherit;cursor:pointer;transition:.22s}.milepost-button:hover,.milepost-button.active{border-color:var(--border-hi);background:linear-gradient(135deg,rgba(45,156,255,.22),rgba(45,156,255,.06));transform:translateY(-2px);box-shadow:0 8px 19px rgba(22,112,223,.16)}.milepost-button b,.milepost-button span,.milepost-button small{display:block}.milepost-button b{color:var(--text);font-size:11px;line-height:1.2}.milepost-button span{margin-top:4px;color:var(--accent2);font-size:10px;font-weight:800}.milepost-button small{margin-top:4px;color:var(--dim);font-size:9px;font-weight:700}.timer-result{display:grid;grid-template-columns:auto 1fr;gap:11px;align-items:center;margin-top:13px;padding:12px;border:1px solid var(--border);border-radius:13px;background:rgba(45,156,255,.075)}.timer-result-icon{width:35px;height:35px;display:grid;place-items:center;border-radius:11px;background:rgba(45,156,255,.17);color:var(--accent2);font-size:17px}.timer-result strong,.timer-result span,.timer-result small{display:block}.timer-result strong{color:var(--text);font-size:14px;letter-spacing:-.02em}.timer-result span{margin-top:2px;color:var(--muted);font-size:11px}.timer-result small{margin-top:4px;color:var(--dim);font-size:9px;line-height:1.35}.timer-result.is-empty{grid-template-columns:1fr}.timer-result.is-empty .timer-result-icon{display:none}.timer-result.is-due{border-color:rgba(255,195,90,.45);background:rgba(255,195,90,.09)}.timer-result.is-due .timer-result-icon{color:var(--yellow);background:rgba(255,195,90,.16)}.legacy-alert-feed{display:none}.timer-reset{margin:10px 0 0;padding:0;border:0;background:transparent;color:var(--accent2);font:800 10px var(--font);letter-spacing:.05em;text-transform:uppercase;cursor:pointer}.timer-reset:hover{color:var(--text)}@media(max-width:440px){.milepost-grid{grid-template-columns:1fr}.timer-controls{align-items:flex-start;flex-direction:column}.timer-controls select{margin-left:0;margin-top:4px}}
+    .train-log-panel .log-embed{height:530px}.train-log-panel .log-embed iframe{height:100%;background:#fff}.train-log-note{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:11px 2px 0;color:var(--dim);font-size:10px;font-weight:650}.train-log-note b{color:var(--accent2);font-weight:800}.train-log-open{flex:none;display:inline-flex;align-items:center;justify-content:center;padding:8px 10px;border:1px solid var(--border);border-radius:9px;color:var(--accent2);background:rgba(45,156,255,.08);font:800 9px var(--font);letter-spacing:.05em;text-decoration:none;text-transform:uppercase;transition:.22s}.train-log-open:hover{color:#fff;border-color:var(--border-hi);background:linear-gradient(90deg,#2da8ff,#2563eb)}.legacy-discord-hooks{display:none}@media(max-width:680px){.train-log-panel .log-embed{height:465px}.train-log-note{align-items:flex-start;flex-direction:column}.train-log-open{width:100%}}
+  </style>
+  <style>
+    .train-log-panel{min-height:420px}.log-overview{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-bottom:13px}.log-stat{padding:11px;border:1px solid var(--border);border-radius:12px;background:rgba(255,255,255,.04)}.log-stat b,.log-stat span{display:block}.log-stat b{color:var(--text);font-size:21px;line-height:1;letter-spacing:-.055em}.log-stat span{margin-top:5px;color:var(--dim);font-size:9px;font-weight:800;letter-spacing:.06em;text-transform:uppercase}.log-next{display:grid;grid-template-columns:auto 1fr;gap:11px;align-items:center;padding:13px;border:1px solid rgba(45,156,255,.35);border-radius:14px;background:linear-gradient(125deg,rgba(45,156,255,.16),rgba(45,156,255,.04))}.log-next-icon{width:37px;height:37px;display:grid;place-items:center;border-radius:11px;background:rgba(45,156,255,.2);color:var(--accent2);font-size:16px}.log-next b,.log-next span,.log-next small{display:block}.log-next b{color:var(--text);font-size:14px;letter-spacing:-.02em}.log-next span{margin-top:2px;color:var(--muted);font-size:11px}.log-next small{margin-top:4px;color:var(--dim);font-size:9px}.log-section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:16px 1px 8px}.log-section-head b{font-size:11px}.log-section-head span{color:var(--dim);font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.06em}.log-upcoming{margin:0;padding:0;list-style:none;border-top:1px solid var(--border)}.log-upcoming li{display:grid;grid-template-columns:66px 1fr auto;gap:10px;align-items:center;padding:10px 2px;border-bottom:1px solid var(--border)}.log-time{color:var(--accent2);font-size:11px;font-weight:850}.log-train b,.log-train span{display:block}.log-train b{color:var(--text);font-size:11px}.log-train span{margin-top:2px;color:var(--muted);font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.log-direction{padding:4px 6px;border:1px solid var(--border);border-radius:7px;color:var(--dim);font-size:8px;font-weight:850;letter-spacing:.06em}.log-footer{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:12px 1px 0;color:var(--dim);font-size:9px;font-weight:700}.log-refresh{border:0;background:transparent;color:var(--accent2);font:800 9px var(--font);letter-spacing:.05em;text-transform:uppercase;cursor:pointer}.log-refresh:hover{color:var(--text)}.log-error{color:var(--yellow)}@media(max-width:680px){.log-overview{grid-template-columns:repeat(3,minmax(0,1fr))}.log-stat{padding:9px}.log-stat b{font-size:17px}.log-upcoming li{grid-template-columns:58px 1fr auto}.log-footer{align-items:flex-start;flex-direction:column}}
+  </style>
+  <script>
+  (() => {
+    const target = { name: 'Utica Union Station', milepost: 237.5, latitude: 43.1009, longitude: -75.2327 };
+    const reports = [
+      { name: 'Amsterdam', label: 'QC 177.4', milepost: 177.4, distance: 60.1, minutes: { 50: 72, 60: 60, 70: 52 }, latitude: 42.941000, longitude: -74.215000 },
+      { name: 'Herkimer', label: 'QC 220.0', milepost: 220.0, distance: 17.5, minutes: { 50: 21, 60: 18, 70: 15 }, latitude: 43.033000, longitude: -74.934000 },
+      { name: 'Whitesboro', label: 'QC 241.4', milepost: 241.4, distance: 3.9, minutes: { 50: 5, 60: 4, 70: 3 }, latitude: 43.119000, longitude: -75.296000 },
+      { name: 'Rome', label: 'QC 251.3', milepost: 251.3, distance: 13.8, minutes: { 50: 17, 60: 14, 70: 12 }, latitude: 43.211000, longitude: -75.456000 },
+      { name: 'Verona', label: 'QC 262.0', milepost: 262.0, distance: 24.5, minutes: { 50: 29, 60: 25, 70: 21 }, latitude: 43.115000, longitude: -75.616000 }
+    ];
+    const storageKey = 'utica-railfan-train-timer-v2';
+    const panel = document.querySelector('#alerts')?.closest('.panel');
+    if (!panel) return;
+
+    panel.classList.add('timer-panel');
+    panel.innerHTML = `
+      <div class="panel-head"><h2><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 7v5l3 2M5 3l-2 2m18-2 2 2"/></svg>Train Timer</h2><span class="panel-tag">Estimate</span></div>
+      <p class="timer-intro">Select the last milepost heard on the scanner to estimate when that train could reach Utica.</p>
+      <div class="timer-assumption"><svg viewBox="0 0 24 24"><path d="M12 9v4m0 4h.01"/><path d="M10.3 4.3 2.8 17.1A2 2 0 0 0 4.5 20h15a2 2 0 0 0 1.7-2.9L13.7 4.3a2 2 0 0 0-3.4 0Z"/></svg><span>Assumes the train is traveling toward Utica. This is a planning estimate, not a live train location or dispatch prediction.</span></div>
+      <div class="timer-controls"><label>Estimated speed <select id="timerSpeed" aria-label="Estimated train speed"><option value="50">50 mph</option><option value="60" selected>60 mph</option><option value="70">70 mph</option></select></label><span class="timer-status" id="timerStatus">Awaiting report</span></div>
+      <div class="milepost-grid" id="milepostChoices"></div>
+      <div class="timer-result is-empty" id="timerResult"><div class="timer-result-icon">⌁</div><div><strong>Choose a milepost</strong><span>The clock starts when you select the location last heard.</span><small>Times use the supplied QC 237.5 route-distance table.</small></div></div>
+      <button class="timer-reset" id="timerReset" type="button" hidden>Clear estimate</button>
+      <div id="alerts" class="legacy-alert-feed" aria-hidden="true"></div>`;
+
+    const $ = id => document.getElementById(id);
+    const choices = $('milepostChoices'), speedSelect = $('timerSpeed'), result = $('timerResult'), status = $('timerStatus'), reset = $('timerReset');
+    let state;
+    try { state = JSON.parse(localStorage.getItem(storageKey) || 'null'); } catch (_) { state = null; }
+    if (!state || !Number.isInteger(state.reportIndex) || !reports[state.reportIndex] || !state.heardAt || Date.now() - state.heardAt > 6 * 60 * 60 * 1000) state = null;
+
+    function routeMiles(report) { return report.distance; }
+    function durationMinutes(report) { return report.minutes[Number(state.speed)]; }
+    function timeText(date) { return date.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', hour12: true }); }
+    function durationText(minutes) { const hours = Math.floor(minutes / 60), mins = minutes % 60; return hours ? `${hours} hr ${mins} min` : `${mins} min`; }
+    function countdownText(milliseconds) { const seconds = Math.max(0, Math.ceil(milliseconds / 1000)), hours = Math.floor(seconds / 3600), minutes = Math.floor(seconds % 3600 / 60), remainder = seconds % 60; return [hours, minutes, remainder].map(value => String(value).padStart(2, '0')).join(':'); }
+    function persist() { localStorage.setItem(storageKey, JSON.stringify(state)); }
+    function renderButtons() { choices.innerHTML = reports.map((report, index) => `<button class="milepost-button${state?.reportIndex === index ? ' active' : ''}" type="button" data-report="${index}"><b>${report.name}</b><span>${report.label}</span><small>${routeMiles(report).toFixed(1)} route mi to QC 237.5</small></button>`).join(''); }
+    function render() {
+      renderButtons();
+      if (!state) { speedSelect.value = '60'; status.textContent = 'Awaiting report'; reset.hidden = true; result.className = 'timer-result is-empty'; result.innerHTML = '<div class="timer-result-icon">⌁</div><div><strong>Choose a milepost</strong><span>The clock starts when you select the location last heard.</span><small>Times use the supplied QC 237.5 route-distance table.</small></div>'; return; }
+      speedSelect.value = String(state.speed);
+      const report = reports[state.reportIndex], minutes = durationMinutes(report), arrival = new Date(state.heardAt + minutes * 60000), remainingMs = arrival - Date.now();
+      reset.hidden = false;
+      if (remainingMs <= 0) { status.textContent = 'Arrival window'; result.className = 'timer-result is-due'; result.innerHTML = `<div class="timer-result-icon">!</div><div><strong>Arrival window is open</strong><span>${report.name} was selected at ${timeText(new Date(state.heardAt))}; estimated arrival was ${timeText(arrival)}.</span><small>${routeMiles(report).toFixed(1)} route mi · ${minutes} min at ${state.speed} mph</small></div>`; }
+      else { status.textContent = 'Timer running'; result.className = 'timer-result'; result.innerHTML = `<div class="timer-result-icon">⌚</div><div><strong>ETA ${timeText(arrival)} · ${countdownText(remainingMs)} remaining</strong><span>From ${report.label}, estimated at ${state.speed} mph toward Utica.</span><small>${routeMiles(report).toFixed(1)} route mi · ${minutes} min from the supplied table</small></div>`; }
+    }
+    choices.addEventListener('click', event => { const button = event.target.closest('[data-report]'); if (!button) return; state = { reportIndex: Number(button.dataset.report), speed: Number(speedSelect.value), heardAt: Date.now() }; persist(); render(); });
+    speedSelect.addEventListener('change', () => { if (!state) return; state.speed = Number(speedSelect.value); persist(); render(); });
+    reset.addEventListener('click', () => { state = null; localStorage.removeItem(storageKey); render(); });
+    const oldFooterTimerButton = $('refreshAlerts');
+    if (oldFooterTimerButton) {
+      const footerTimerButton = oldFooterTimerButton.cloneNode(true);
+      footerTimerButton.textContent = 'Clear timer';
+      oldFooterTimerButton.replaceWith(footerTimerButton);
+      footerTimerButton.addEventListener('click', () => { state = null; localStorage.removeItem(storageKey); render(); });
+    }
+    render(); setInterval(render, 1000);
+
+    // Replace the original Utica selector with the requested YouTube embed without changing the other cameras.
+    const oldUticaButton = document.querySelector('[data-cam="3"]');
+    if (oldUticaButton) {
+      const uticaButton = oldUticaButton.cloneNode(true);
+      oldUticaButton.replaceWith(uticaButton);
+      uticaButton.addEventListener('click', () => {
+        const video = $('video'), frame = $('youtubeCamera');
+        video.pause(); video.classList.add('is-hidden'); frame.classList.remove('is-hidden');
+        document.querySelectorAll('[data-cam]').forEach(button => button.classList.toggle('active', button === uticaButton));
+        $('cameraName').textContent = 'Utica Station'; $('cameraHelp').classList.remove('show');
+        const origin = location.origin && location.origin !== 'null' ? location.origin : 'https://sites.google.com';
+        frame.src = 'https://www.youtube.com/embed/5w9O6E5-l1w?si=S5tXVUv5WfB2Fhjz&enablejsapi=1&playsinline=1&origin=' + encodeURIComponent(origin) + '&widget_referrer=' + encodeURIComponent(document.referrer || origin);
+      });
+    }
+
+    // Replace the former Discord card with the community-maintained Utica train log.
+    const discordPanel = document.querySelector('.discord-panel');
+    if (discordPanel) {
+      const logPanel = document.createElement('article');
+      logPanel.className = 'panel service-panel station-panel train-log-panel';
+      logPanel.innerHTML = `
+        <div class="panel-head"><h2><svg viewBox="0 0 24 24"><path d="M6 3h9l3 3v15H6z"/><path d="M15 3v4h4M9 11h6m-6 4h6m-6 4h4"/></svg>Utica Train Log</h2><span class="panel-tag">Community log</span></div>
+        <div class="embed log-embed"><iframe src="https://docs.google.com/spreadsheets/d/1yDrFVGKd3U5iLUW11Rh5yXFyzbAKwg3mJr2WVbjyOoA/preview?rm=minimal" title="Utica NY community train log" loading="lazy">Your browser does not support embedded spreadsheets.</iframe></div>
+        <div class="train-log-note"><span><b>Live log</b> · Updates in the shared Sheet appear here when its public sharing or publishing settings allow embedding.</span><a class="train-log-open" href="https://docs.google.com/spreadsheets/d/1yDrFVGKd3U5iLUW11Rh5yXFyzbAKwg3mJr2WVbjyOoA/edit" target="_blank" rel="noopener">Open train log</a></div>
+        <div class="legacy-discord-hooks" aria-hidden="true"><span id="discordName"> </span><span id="discordTotal"></span><span id="discordOnline"></span></div>`;
+      discordPanel.replaceWith(logPanel);
+    }
+
+    // Turn the public Google Sheet into a compact, native schedule digest instead of embedding the sheet UI.
+    const nativeLogPanel = document.querySelector('.train-log-panel');
+    if (nativeLogPanel) {
+      nativeLogPanel.innerHTML = `
+        <div class="panel-head"><h2><svg viewBox="0 0 24 24"><path d="M6 3h9l3 3v15H6z"/><path d="M15 3v4h4M9 11h6m-6 4h6m-6 4h4"/></svg>Utica Train Logs</h2><span class="panel-tag" id="logStatus">Loading logs</span></div>
+        <p class="timer-intro">Past schedule data only — not a live tracker or an indication of current train activity. The source is rechecked every minute.</p>
+        <div class="log-overview"><div class="log-stat"><b id="logTotal">—</b><span>Logged trains</span></div><div class="log-stat"><b id="logDirections">—</b><span>EB / WB in record</span></div><div class="log-stat"><b id="logRailroads">—</b><span>Railroads in record</span></div></div>
+        <div class="log-next" id="logNext"><div class="log-next-icon">⌁</div><div><b>Reading past train data…</b><span>The last train recorded to pass by will appear here.</span><small>Source: Utica community train logs</small></div></div>
+        <div class="log-section-head"><b>Most recent train log entries</b><span id="logScheduleDate">—</span></div>
+        <ul class="log-upcoming" id="logUpcoming"><li><span class="log-time">—</span><div class="log-train"><b>Loading train logs</b><span>Please wait a moment.</span></div><span class="log-direction">—</span></li></ul>
+        <div class="log-footer"><span id="logUpdated">Waiting for the first source check…</span><button class="log-refresh" id="logRefresh" type="button">Check source ↻</button></div>
+        <a class="train-log-open" href="https://docs.google.com/spreadsheets/d/1yDrFVGKd3U5iLUW11Rh5yXFyzbAKwg3mJr2WVbjyOoA/edit?usp=sharing" target="_blank" rel="noopener">Open train logs</a>
+        <div class="legacy-discord-hooks" aria-hidden="true"><span id="discordName"> </span><span id="discordTotal"></span><span id="discordOnline"></span></div>`;
+
+      const cell = (row, column) => String(row?.c?.[column]?.f ?? row?.c?.[column]?.v ?? '').replace(/\s+/g, ' ').trim();
+      const escapeHtml = value => String(value).replace(/[&<>"']/g, character => character === '&' ? '&amp;' : character === '<' ? '&lt;' : character === '>' ? '&gt;' : character === '"' ? '&quot;' : '&#39;');
+      const clockMinutes = value => { const match = String(value).match(/^(\d{1,2}):(\d{2})/); return match ? Number(match[1]) * 60 + Number(match[2]) : null; };
+      const displayTime = value => { const match = String(value).match(/^(\d{1,2}):(\d{2})/); if (!match) return 'Time TBD'; const hour = Number(match[1]); return `${(hour % 12) || 12}:${match[2]} ${hour >= 12 ? 'PM' : 'AM'}`; };
+      const text = id => document.getElementById(id);
+      const sheetEndpoint = 'https://docs.google.com/spreadsheets/d/1yDrFVGKd3U5iLUW11Rh5yXFyzbAKwg3mJr2WVbjyOoA/gviz/tq';
+      let logRequestNumber = 0;
+
+      function trainRows(payload) {
+        if (payload?.status !== 'ok') throw new Error('The train log did not return a usable schedule.');
+        const rows = payload.table?.rows || [];
+        const headerAt = rows.findIndex(row => cell(row, 2).toUpperCase() === 'RR' && cell(row, 3).toUpperCase() === 'SYMBOL');
+        if (headerAt < 0) throw new Error('The train log columns could not be identified.');
+        const dateRow = rows.find(row => cell(row, 4).toUpperCase() === 'UTICA, NY TRAIN LOG');
+        const dateLabel = dateRow ? cell(dateRow, 6) : 'Undated train log';
+        const trains = rows.slice(headerAt + 1).map(row => ({ time: cell(row, 1), railroad: cell(row, 2), symbol: cell(row, 3), origin: cell(row, 4), destination: cell(row, 6), frequency: cell(row, 7), type: cell(row, 8), direction: cell(row, 9) })).filter(train => train.railroad && train.symbol);
+        if (!trains.length) throw new Error('No train rows are available yet.');
+        return { trains, dateLabel };
+      }
+
+      function renderDigest(payload) {
+        const { trains, dateLabel } = trainRows(payload);
+        const eastbound = trains.filter(train => train.direction.toUpperCase() === 'EB').length;
+        const westbound = trains.filter(train => train.direction.toUpperCase() === 'WB').length;
+        const railroads = new Set(trains.map(train => train.railroad.toUpperCase())).size;
+        const now = new Date();
+        const ordered = [...trains].map(train => ({ ...train, minutes: clockMinutes(train.time) })).filter(train => train.minutes !== null).sort((a, b) => a.minutes - b.minutes);
+        const latest = ordered.slice(-5).reverse();
+        const lastRecorded = latest[0];
+        text('logTotal').textContent = trains.length;
+        text('logDirections').textContent = `${eastbound} / ${westbound}`;
+        text('logRailroads').textContent = railroads;
+        text('logScheduleDate').textContent = `Past train data · ${dateLabel}`;
+        text('logStatus').textContent = 'Past train data';
+        text('logNext').innerHTML = `<div class="log-next-icon">⌚</div><div><b>Last train recorded: ${escapeHtml(displayTime(lastRecorded.time))} · ${escapeHtml(lastRecorded.railroad)} ${escapeHtml(lastRecorded.symbol)}</b><span>${escapeHtml(lastRecorded.direction || 'Direction TBD')} · ${escapeHtml(lastRecorded.type || lastRecorded.frequency || 'Train log entry')}</span><small>${escapeHtml(lastRecorded.origin || 'Origin TBD')} → ${escapeHtml(lastRecorded.destination || 'Destination TBD')}</small></div>`;
+        text('logUpcoming').innerHTML = latest.map(train => `<li><span class="log-time">${escapeHtml(displayTime(train.time))}</span><div class="log-train"><b>${escapeHtml(train.railroad)} ${escapeHtml(train.symbol)}</b><span>${escapeHtml(train.origin || 'Origin TBD')} → ${escapeHtml(train.destination || 'Destination TBD')}</span></div><span class="log-direction">${escapeHtml(train.direction || 'TBD')}</span></li>`).join('');
+        text('logUpdated').className = '';
+        text('logUpdated').textContent = `Train logs checked ${now.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', hour12: true })} · rechecks in 1 min`;
+      }
+
+      function showLogError() {
+        text('logStatus').textContent = 'Logs unavailable';
+        text('logUpdated').className = 'log-error';
+        text('logUpdated').textContent = 'Could not check the public train logs. The dashboard will retry automatically in one minute.';
+      }
+
+      function refreshTrainDigest() {
+        const callback = `uticaTrainLogCallback${Date.now()}${logRequestNumber++}`;
+        const script = document.createElement('script');
+        const cleanUp = () => { clearTimeout(timeout); script.remove(); delete window[callback]; };
+        const timeout = setTimeout(() => { cleanUp(); showLogError(); }, 20000);
+        window[callback] = payload => { cleanUp(); try { renderDigest(payload); } catch (_) { showLogError(); } };
+        script.onerror = () => { cleanUp(); showLogError(); };
+        script.src = `${sheetEndpoint}?tqx=out:json;responseHandler:${callback}&_=${Date.now()}`;
+        document.head.append(script);
+      }
+
+      text('logRefresh').addEventListener('click', refreshTrainDigest);
+      refreshTrainDigest();
+      setInterval(refreshTrainDigest, 60000);
+    }
+  })();
+  </script>
 </body>
 </html>
